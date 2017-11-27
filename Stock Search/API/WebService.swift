@@ -15,7 +15,7 @@ class WebService {
     let stockData = StockData()
     
     init() {
-        self.BASE_URL = "http://0.0.0.0:3000/api/ios/"
+        self.BASE_URL = "http://stocksearch.us-east-2.elasticbeanstalk.com/api/ios/"
     }
     
     func getPriceTable(symbol: String, completion: @escaping (StockData?) -> Void ) {
