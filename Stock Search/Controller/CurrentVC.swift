@@ -31,6 +31,7 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var symbol: String?
     let pickerOptions = ["Price", "SMA", "EMA", "STOCH", "RSI", "ADX", "CCI", "BBANS", "MACD"]
     var didSelectRow = 0
+    var btnAtRow = 0
     
     //Activity Indicator
     var actIndicatior: UIActivityIndicatorView = UIActivityIndicatorView()
@@ -87,12 +88,19 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if btnAtRow != row {
+            changeBtn.isEnabled = true
+        } else {
+            changeBtn.isEnabled = false
+        }
         didSelectRow = row
     }
     
+    //MARK: - button events
     @IBAction func didSelectChangeBtn(_ sender: Any) {
         self.showActIndicator()
-
+        btnAtRow = didSelectRow
+        changeBtn.isEnabled = false
         switch didSelectRow {
         case 0:
             webService.getPriceChart(symbol: symbol!) { (stockData) in
@@ -208,8 +216,10 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.indicatorPicker.delegate = self
         self.indicatorPicker.dataSource = self
     
-        //get local storage
-        runningFavList = IO.object(forKey: "symbolList") as! [String]
+        //get local storage, first time running app it's empty, so should use if let
+        if let x = IO.object(forKey: "symbolList") as? [String]{
+            runningFavList = x
+        }
         //set btn Img
         starBtn.setBackgroundImage(#imageLiteral(resourceName: "star-filled"), for: .selected)
         starBtn.setBackgroundImage(#imageLiteral(resourceName: "star-empty"), for: .normal)
@@ -245,6 +255,10 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         } else {
             starBtn.isSelected = false
         }
+        
+        changeBtn.isEnabled = false
+        didSelectRow = 0
+        btnAtRow = 0
         
         whiteView.frame = CGRect(x: 0, y: 0, width: 375, height: 408)
         whiteView.backgroundColor = UIColor.white

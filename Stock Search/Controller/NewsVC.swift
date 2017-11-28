@@ -46,6 +46,9 @@ class NewsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }
+        
+        // clean highlighted selected row
+            newsTableView.deselectRow(at: indexPath, animated: true)
     }
     
     //MARK: -

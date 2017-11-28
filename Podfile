@@ -9,5 +9,6 @@ target 'Stock Search' do
 pod 'Alamofire', '~> 4.5'
 pod 'SwiftyJSON'
 pod 'SwiftSpinner'
+pod 'EasyToast'
 
 end

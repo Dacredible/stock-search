@@ -45,7 +45,7 @@
                                                     <rect key="frame" x="74" y="8" width="60" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="21" id="Lms-3C-Rz5"/>
-                                                        <constraint firstAttribute="width" constant="70" id="vU7-E0-pIa"/>
+                                                        <constraint firstAttribute="width" constant="80" id="vU7-E0-pIa"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -107,6 +107,9 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="search"/>
+                                <connections>
+                                    <action selector="inputChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="goc-BF-Bm7"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MAT-GN-GnK">
                                 <rect key="frame" x="43" y="147" width="93" height="30"/>
@@ -166,6 +169,9 @@
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="xna-WL-gAs">
                                 <rect key="frame" x="241" y="198" width="51" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="toggleAutoRefresh:" destination="BYZ-38-t0r" eventType="valueChanged" id="QOJ-Cs-rj3"/>
+                                </connections>
                             </switch>
                             <pickerView tag="1" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fsy-k0-i2F">
                                 <rect key="frame" x="249" y="255" width="110" height="50"/>
@@ -183,7 +189,7 @@
                     <connections>
                         <outlet property="autoRefresh" destination="xna-WL-gAs" id="0Oh-9M-Pog"/>
                         <outlet property="getQuoteBtn" destination="MAT-GN-GnK" id="JMy-BT-rbh"/>
-                        <outlet property="input" destination="eda-xG-iOg" id="sDK-4q-zXB"/>
+                        <outlet property="input" destination="eda-xG-iOg" id="b2j-nm-GHv"/>
                         <outlet property="orderPicker" destination="fsy-k0-i2F" id="a12-on-23g"/>
                         <outlet property="refreshBtn" destination="0dB-bV-anl" id="XlL-a8-5lh"/>
                         <outlet property="sortPicker" destination="wVP-cE-ysM" id="ISu-Hi-ZUH"/>
@@ -197,7 +203,7 @@
         <!--Result-->
         <scene sceneID="hJ9-rh-zP8">
             <objects>
-                <viewController title="Result" id="PKG-2U-8N6" customClass="ResultVC" customModule="Stock_Search" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="resultVC" title="Result" id="PKG-2U-8N6" customClass="ResultVC" customModule="Stock_Search" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5VC-VI-QFq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -444,9 +450,7 @@
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ciW-7v-6Et">
                                             <rect key="frame" x="305" y="27" width="62" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Change">
-                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </state>
+                                            <state key="normal" title="Change"/>
                                             <connections>
                                                 <action selector="didSelectChangeBtn:" destination="daH-ec-8Hj" eventType="touchUpInside" id="dZ1-I6-bui"/>
                                             </connections>

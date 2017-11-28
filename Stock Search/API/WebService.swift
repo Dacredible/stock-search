@@ -174,16 +174,15 @@ class WebService {
     
     func getFavItem(symbol: String, completion: @escaping (FavoriteItem) -> Void ){
         var favItem = FavoriteItem()
-
         let url = "\(self.BASE_URL!)pricetable?stockSymbol=\(symbol)"
         Alamofire.request(url).responseJSON { response in
             if let jsonDic = response.result.value as? [String: Any]{
-                favItem.symbol = jsonDic["Stock Ticker Symbol"] as! String
-                favItem.price = jsonDic["Last Price"] as! String
-                let changeStr = jsonDic["Change"] as! String
-                favItem.change = changeStr.replacingOccurrences(of: "\\((.*?)\\)", with: "", options: .regularExpression)
-                let range = changeStr.range(of: "\\((.*?)\\)", options: .regularExpression)
-                favItem.change_percent = String(changeStr[range!])
+                favItem.symbol = (jsonDic["Stock Ticker Symbol"] as? String)
+                favItem.price = (jsonDic["Last Price"] as? String)
+                let changeStr = jsonDic["Change"] as? String
+                favItem.change = (changeStr?.replacingOccurrences(of: "\\((.*?)\\)", with: "", options: .regularExpression))
+                let range = changeStr?.range(of: "\\((.*?)\\)", options: .regularExpression)
+                favItem.change_percent = String(changeStr![range!])
                 completion(favItem)
             } else {
                 completion(favItem)
@@ -192,8 +191,20 @@ class WebService {
         
 
     }
+    
     func postFB(optioins: String, completioin: @escaping (String) -> Void) {
         
+    }
+    
+    static func getAutoComplete(input: String, completion: @escaping ([String]) -> Void) {
+        var resultArr = [String]()
+        let url = "http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=\(input)"
+        Alamofire.request(url).responseJSON { (response) in
+            if let data = response.data {
+                let json = JSON(data: data)
+                print(json)
+            }
+        }
     }
     
 }

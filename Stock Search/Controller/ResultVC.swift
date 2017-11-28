@@ -61,7 +61,7 @@ class ResultVC: UIViewController {
         super.viewDidLoad()
         self.navTitle?.title = symbol
         // Do any additional setup after loading the view.
-        SwiftSpinner.show("Loading...")
+        SwiftSpinner.show("Loading Data")
     }
 
 

@@ -22,11 +22,4 @@ final class FavListAPI {
         return favList
     }
     
-    func addItem(_ item: FavoriteItem) {
-        favList.append(item)
-    }
-    
-    func removeItem(at index: Int) {
-        favList.remove(at: index)
-    }
 }

@@ -9,10 +9,10 @@
 import Foundation
 
 struct FavoriteItem {
-    var symbol: String
-    var price: String
-    var change: String
-    var change_percent: String
+    var symbol: String?
+    var price: String?
+    var change: String?
+    var change_percent: String?
     
     init() {
         symbol = ""
