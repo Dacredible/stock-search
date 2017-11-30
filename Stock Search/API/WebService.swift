@@ -22,6 +22,10 @@ class WebService {
         let url = "\(self.BASE_URL!)pricetable?stockSymbol=\(symbol)"
         Alamofire.request(url).responseJSON { response in
             if let jsonDic = response.result.value as? [String: Any]{
+                guard jsonDic["Error Message"] == nil else{
+                    completion(nil)
+                    return
+                }
                 self.stockData.setPriceTable(jsonDic)
                 completion(self.stockData)
             } else {
@@ -35,6 +39,10 @@ class WebService {
         Alamofire.request(url).responseJSON { response in
             if let data = response.data {
                 let json = JSON(data: data)
+                guard json["Error Message"] == JSON.null else{
+                    completion(nil)
+                    return
+                }
                 self.stockData.setPriceChart(json)
                 completion(self.stockData)
             } else {
@@ -48,6 +56,10 @@ class WebService {
         Alamofire.request(url).responseJSON { response in
             if let data = response.data {
                 let json = JSON(data: data)
+                guard json["Error Message"] == JSON.null else{
+                    completion(nil)
+                    return
+                }
                 self.stockData.setHistChart(json)
                 completion(self.stockData)
             } else {
@@ -61,6 +73,10 @@ class WebService {
         Alamofire.request(url).responseJSON { response in
             if let data = response.data {
                 let json = JSON(data: data)
+                guard json["Error Message"] == JSON.null else{
+                    completion(nil)
+                    return
+                }
                 self.stockData.setSMA(json)
                 completion(self.stockData)
             } else {
@@ -74,6 +90,10 @@ class WebService {
         Alamofire.request(url).responseJSON { response in
             if let data = response.data {
                 let json = JSON(data: data)
+                guard json["Error Message"] == JSON.null else{
+                    completion(nil)
+                    return
+                }
                 self.stockData.setEMA(json)
                 completion(self.stockData)
             } else {
@@ -87,6 +107,10 @@ class WebService {
         Alamofire.request(url).responseJSON { response in
             if let data = response.data {
                 let json = JSON(data: data)
+                guard json["Error Message"] == JSON.null else{
+                    completion(nil)
+                    return
+                }
                 self.stockData.setRSI(json)
                 completion(self.stockData)
             } else {
@@ -100,6 +124,10 @@ class WebService {
         Alamofire.request(url).responseJSON { response in
             if let data = response.data {
                 let json = JSON(data: data)
+                guard json["Error Message"] == JSON.null else{
+                    completion(nil)
+                    return
+                }
                 self.stockData.setSTOCH(json)
                 completion(self.stockData)
             } else {
@@ -113,6 +141,10 @@ class WebService {
         Alamofire.request(url).responseJSON { response in
             if let data = response.data {
                 let json = JSON(data: data)
+                guard json["Error Message"] == JSON.null else{
+                    completion(nil)
+                    return
+                }
                 self.stockData.setADX(json)
                 completion(self.stockData)
             } else {
@@ -126,6 +158,10 @@ class WebService {
         Alamofire.request(url).responseJSON { response in
             if let data = response.data {
                 let json = JSON(data: data)
+                guard json["Error Message"] == JSON.null else{
+                    completion(nil)
+                    return
+                }
                 self.stockData.setCCI(json)
                 completion(self.stockData)
             } else {
@@ -139,6 +175,10 @@ class WebService {
         Alamofire.request(url).responseJSON { response in
             if let data = response.data {
                 let json = JSON(data: data)
+                guard json["Error Message"] == JSON.null else{
+                    completion(nil)
+                    return
+                }
                 self.stockData.setBBANDS(json)
                 completion(self.stockData)
             } else {
@@ -152,6 +192,10 @@ class WebService {
         Alamofire.request(url).responseJSON { response in
             if let data = response.data {
                 let json = JSON(data: data)
+                guard json["Error Message"] == JSON.null else{
+                    completion(nil)
+                    return
+                }
                 self.stockData.setMACD(json)
                 completion(self.stockData)
             } else {
@@ -172,20 +216,24 @@ class WebService {
         }
     }
     
-    func getFavItem(symbol: String, completion: @escaping (FavoriteItem) -> Void ){
+    func getFavItem(symbol: String, completion: @escaping (FavoriteItem?) -> Void ){
         var favItem = FavoriteItem()
         let url = "\(self.BASE_URL!)pricetable?stockSymbol=\(symbol)"
         Alamofire.request(url).responseJSON { response in
             if let jsonDic = response.result.value as? [String: Any]{
-                favItem.symbol = (jsonDic["Stock Ticker Symbol"] as? String)
-                favItem.price = (jsonDic["Last Price"] as? String)
-                let changeStr = jsonDic["Change"] as? String
-                favItem.change = (changeStr?.replacingOccurrences(of: "\\((.*?)\\)", with: "", options: .regularExpression))
-                let range = changeStr?.range(of: "\\((.*?)\\)", options: .regularExpression)
-                favItem.change_percent = String(changeStr![range!])
+                guard jsonDic["Error Message"] == nil else{
+                    completion(nil)
+                    return
+                }
+                favItem.symbol = (jsonDic["Stock Ticker Symbol"] as! String)
+                favItem.price = (jsonDic["Last Price"] as! String)
+                let changeStr = jsonDic["Change"] as! String
+                favItem.change = (changeStr.replacingOccurrences(of: "\\((.*?)\\)", with: "", options: .regularExpression))
+                let range = changeStr.range(of: "\\((.*?)\\)", options: .regularExpression)
+                favItem.change_percent = String(changeStr[range!])
                 completion(favItem)
             } else {
-                completion(favItem)
+                completion(nil)
             }
         }
         
@@ -198,11 +246,25 @@ class WebService {
     
     static func getAutoComplete(input: String, completion: @escaping ([String]) -> Void) {
         var resultArr = [String]()
+        var count = 0
         let url = "http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=\(input)"
         Alamofire.request(url).responseJSON { (response) in
             if let data = response.data {
                 let json = JSON(data: data)
-                print(json)
+                if let items = json.array {
+                    for item in items {
+                        count = count + 1
+                        let name = item["Name"].rawString()
+                        let exchange = item["Exchange"].rawString()
+                        let symbol = item["Symbol"].rawString()
+                        let result = "\(symbol!) - \(name!) (\(exchange!))"
+                        resultArr.append(result)
+                        if count >= 5 {
+                            break
+                        }
+                    }
+                }
+                completion(resultArr)
             }
         }
     }

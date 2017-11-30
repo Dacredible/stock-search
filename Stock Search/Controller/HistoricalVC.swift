@@ -24,15 +24,22 @@ class HistoricalVC: UIViewController {
         let urlRequest: URLRequest = URLRequest(url: url)
         self.chartView.load(urlRequest)
         
+        let errorLabel = UILabel(frame: CGRect(x: 50, y: 200, width: 250, height: 20))
+        errorLabel.text = "Failed to load historical data"
+        
         let webService = WebService()
         webService.getHistChart(symbol: symbol!) { (stockData) in
+            guard stockData != nil else {
+                self.view.addSubview(errorLabel)
+                return
+            }
             self.stockData.histChart = (stockData?.histChart)!
             self.updateChart()
         }
     }
 
     func updateChart() {
-        if let json = stockData.histChart["options"] as? JSON {
+         let json = stockData.histChart["options"]
             if let options = json.rawString(options: []) {
                 self.chartView.evaluateJavaScript("drawChart(\(options))") { (result, error) in
                     guard error == nil else {
@@ -42,6 +49,6 @@ class HistoricalVC: UIViewController {
                     print("Historical Chart Success")
                 }
             }
-        }
+        
     }
 }

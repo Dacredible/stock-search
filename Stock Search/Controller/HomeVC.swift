@@ -8,7 +8,7 @@
 
 import UIKit
 import EasyToast
-import SearchTextField
+import DropDown
 
 class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -31,6 +31,23 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     var isInputEmpty: Bool = true
     let IO = UserDefaults.standard
     let webService = WebService()
+    let dropDown = DropDown()
+    
+//    enum Order {
+//        case Ascend
+//        case Descend
+//    }
+//
+//    enum SortType {
+//        case Default
+//        case Symbol
+//        case Price
+//        case Change
+//        case ChangePercent
+//    }
+    
+    var currentSortOption = 0 //stands for option, same as row
+    var currtentOrderOption = 0
     
     lazy var testData: [Int] = {
         var nums = [Int]()
@@ -49,7 +66,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         let cell = stockTableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! FavListTableCell
 
         cell.symbolLabel?.text = favList[indexPath.row].symbol
-        cell.priceLabel?.text = "$\(favList[indexPath.row].price)"
+        cell.priceLabel?.text = "$\(favList[indexPath.row].price ?? "" )"
         cell.changeLabel?.text = favList[indexPath.row].change
         cell.changePercentLabel?.text = favList[indexPath.row].change_percent
         
@@ -132,16 +149,28 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         switch pickerView.tag {
         case 0:
-            print(sortOptions[row])
             if row == 0 {
                 orderPicker.isUserInteractionEnabled = false
             } else {
                 orderPicker.isUserInteractionEnabled = true
             }
+            print(sortOptions[row])
+            currentSortOption = row
+            if currtentOrderOption == 0 {
+                sortFavListAscend(by: currentSortOption)
+            } else {
+                sortFavListDescend(by: currentSortOption)
+            }
         case 1:
             print(orderOptions[row])
+            currtentOrderOption = row
+            if currtentOrderOption == 0 {
+                sortFavListAscend(by: currentSortOption)
+            } else {
+                sortFavListDescend(by: currentSortOption)
+            }
         default:
-            print("Error")
+            return
         }
     }
     
@@ -156,11 +185,111 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         return false
     }
     
-    //MARK: - autocomplete
-    @IBAction func inputChanged(_ sender: SearchTextField) {
-        print("typed")
+    //MARK: - sorting function
+    func sortFavListAscend(by: Int) {
+        switch by {
+        case 0:
+            print("default, no need to sort")
+        case 1:
+            let res = favList.sorted{ (x,y) -> Bool in
+                return x.symbol! < y.symbol!
+            }
+            favList = res
+            self.stockTableView.reloadData()
+        case 2:
+            let res = favList.sorted{ (x,y) -> Bool in
+                return Double(x.price!)! < Double(y.price!)!
+            }
+            favList = res
+            self.stockTableView.reloadData()
+        case 3:
+            let res = favList.sorted{ (x,y) -> Bool in
+                return Double(x.change!.trim())! < Double(y.change!.trim())!
+            }
+            favList = res
+            self.stockTableView.reloadData()
+        case 4:
+            let res = favList.sorted{ (x,y) -> Bool in
+                return x.change_percent! < y.change_percent!
+            }
+            favList = res
+            self.stockTableView.reloadData()
+        default:
+            return
+        }
     }
     
+    func sortFavListDescend(by: Int) {
+        switch by {
+        case 0:
+            print("default, no need to sort")
+        case 1:
+            let res = favList.sorted{ (x,y) -> Bool in
+                return x.symbol! > y.symbol!
+            }
+            favList = res
+            self.stockTableView.reloadData()
+        case 2:
+            let res = favList.sorted{ (x,y) -> Bool in
+                return Double(x.price!)! > Double(y.price!)!
+            }
+            favList = res
+            self.stockTableView.reloadData()
+        case 3:
+            let res = favList.sorted{ (x,y) -> Bool in
+                return Double(x.change!.trim())! > Double(y.change!.trim())!
+            }
+            favList = res
+            self.stockTableView.reloadData()
+        case 4:
+            let res = favList.sorted{ (x,y) -> Bool in
+                return x.change_percent! > y.change_percent!
+            }
+            favList = res
+            self.stockTableView.reloadData()
+        default:
+            return
+        }
+    }
+
+    //MARK: - autocomplete
+
+    @IBAction func inputChanged(_ sender: Any) {
+        print("change")
+        WebService.getAutoComplete(input: input.text!) { (resultArr) in
+            
+            // The list of items to display. Can be changed dynamically
+            self.dropDown.dataSource = resultArr
+            self.dropDown.show()
+            print(resultArr)
+        }
+    }
+    
+    //MARK: - setup dropdown
+    func setUpDropDown() {
+        // The view to which the drop down will appear on
+        self.dropDown.anchorView = self.input
+        self.dropDown.bottomOffset = CGPoint(x: 0, y: input.bounds.height)
+        self.dropDown.direction = .any
+        self.dropDown.dismissMode = .onTap
+        DropDown.appearance().backgroundColor = UIColor(white: 1, alpha: 0.8)
+        dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+            print("Selected item: \(item) at index: \(index)")
+            let arr = item.split(separator: " ")
+            let s = String(arr[0])
+            self.input.text = s
+        }
+    }
+    
+    //MARK: - setup ActIndicator
+    func setUpActIndicator() {
+        // init actindicator
+        actIndicatior.center = stockTableView.center
+        actIndicatior.hidesWhenStopped = true
+        actIndicatior.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
+        actIndicatior.color = UIColor.green
+        self.view.addSubview(actIndicatior)
+    }
     //MARK: - button events
     @IBAction func getQueto(_ sender: Any) {
         guard let symbol = input.text?.trim().uppercased() else{
@@ -237,8 +366,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         orderPicker.delegate = self
         
         orderPicker.isUserInteractionEnabled = false
-        
-      
+
         
     }
 
@@ -255,20 +383,16 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         if let selectedRowNotNill = selectedRow {
             stockTableView.deselectRow(at: selectedRowNotNill, animated: true)
         }
-        
-        // init actindicator
-        actIndicatior.center = stockTableView.center
-        actIndicatior.hidesWhenStopped = true
-        actIndicatior.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
-        actIndicatior.color = UIColor.green
-        self.view.addSubview(actIndicatior)
-        
+
+        self.setUpActIndicator()
+        self.setUpDropDown()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         self.navigationController?.isNavigationBarHidden = false
     }
 
+    //MARK: -
     func fetchFavList(symbolList: [String], completion: @escaping (String) -> Void) {
         let count = symbolList.count
         guard count != 0 else {
@@ -278,7 +402,10 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         var incrementor: Int = 0
         for symbol in symbolList {
             webService.getFavItem(symbol: symbol, completion: { (favItem) in
-                self.favList.append(favItem)
+                guard favItem != nil else {
+                    return
+                }
+                self.favList.append(favItem!)
                 incrementor = incrementor + 1
                 if count == incrementor {
                     completion("Success")

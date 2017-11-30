@@ -108,7 +108,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="search"/>
                                 <connections>
-                                    <action selector="inputChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="goc-BF-Bm7"/>
+                                    <action selector="inputChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="UgY-vN-fiF"/>
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MAT-GN-GnK">

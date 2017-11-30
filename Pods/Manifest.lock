@@ -1,21 +1,24 @@
 PODS:
   - Alamofire (4.5.0)
+  - DropDown (2.0.1)
   - EasyToast (2.0.2)
   - SwiftSpinner (1.3.0)
   - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
   - Alamofire (~> 4.5)
+  - DropDown
   - EasyToast
   - SwiftSpinner
   - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
+  DropDown: 7da559c37b5515156cc21289945189921f500498
   EasyToast: 2844de2158fe8d2313c6de81b5a858a909d82532
   SwiftSpinner: c249fffed3e74b5f3e6492dcc05d6bc1525a8220
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 2b9bc9b0e5c6209607b496cd5fdba754a3a968ac
+PODFILE CHECKSUM: 59b44414d474d0557d31c8dd4ae4e523d8fdd501
 
 COCOAPODS: 1.2.1

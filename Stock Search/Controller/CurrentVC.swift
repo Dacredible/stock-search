@@ -10,6 +10,7 @@ import UIKit
 import SwiftSpinner
 import WebKit
 import SwiftyJSON
+import EasyToast
 
 class priceTableCell: UITableViewCell {
     @IBOutlet weak var title: UILabel!
@@ -49,7 +50,7 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         return keys
     }()
     
-    //Mark: - tableView protocol
+    //MARK: - tableView protocol
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableHead.count
     }
@@ -57,10 +58,14 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = currentTableView.dequeueReusableCell(withIdentifier: "priceCell", for: indexPath) as! priceTableCell
         cell.title.text = tableHead[indexPath.row]
+//        guard self.stockData.priceTable != ["error":""] else {
+//            return cell
+//        }
         cell.detail.text = self.stockData.priceTable[tableDetailKey[indexPath.row]] as? String
         if indexPath.row == 2 {
             let charset = CharacterSet(charactersIn: "-")
             guard cell.detail.text != nil else{
+                cell.imgView.image = nil
                 return cell
             }
             if ((cell.detail.text?.rangeOfCharacter(from: charset)) != nil) {
@@ -70,6 +75,9 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 cell.detail.textColor = UIColor.green
                 cell.imgView.image = #imageLiteral(resourceName: "arrow-up")
             }
+        }
+        if cell.detail.text == nil {
+            cell.detail.text = ""
         }
         return cell
     }
@@ -105,7 +113,7 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         case 0:
             webService.getPriceChart(symbol: symbol!) { (stockData) in
                 self.stockData.priceChart = (stockData?.priceChart)!
-                if let json = stockData?.priceChart["options"] as? JSON {
+                if let json = stockData?.priceChart["options"] {
                     self.updateChart(json)
                 }
                 self.hideActIndicator()
@@ -113,7 +121,7 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         case 1:
             webService.getSMA(symbol: symbol!) { (stockData) in
                 self.stockData.SMA = (stockData?.SMA)!
-                if let json = stockData?.SMA["options"] as? JSON {
+                if let json = stockData?.SMA["options"] {
                     self.updateChart(json)
                 }
                 self.hideActIndicator()
@@ -121,7 +129,7 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         case 2:
             webService.getEMA(symbol: symbol!) { (stockData) in
                 self.stockData.EMA = (stockData?.EMA)!
-                if let json = stockData?.EMA["options"] as? JSON {
+                if let json = stockData?.EMA["options"] {
                     self.updateChart(json)
                 }
                 self.hideActIndicator()
@@ -129,7 +137,7 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         case 3:
             webService.getSTOCH(symbol: symbol!) { (stockData) in
                 self.stockData.STOCH = (stockData?.STOCH)!
-                if let json = stockData?.STOCH["options"] as? JSON {
+                if let json = stockData?.STOCH["options"] {
                     self.updateChart(json)
                 }
                 self.hideActIndicator()
@@ -137,7 +145,7 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         case 4:
             webService.getRSI(symbol: symbol!) { (stockData) in
                 self.stockData.RSI = (stockData?.RSI)!
-                if let json = stockData?.RSI["options"] as? JSON {
+                if let json = stockData?.RSI["options"] {
                     self.updateChart(json)
                 }
                 self.hideActIndicator()
@@ -145,7 +153,7 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         case 5:
             webService.getADX(symbol: symbol!) { (stockData) in
                 self.stockData.ADX = (stockData?.ADX)!
-                if let json = stockData?.ADX["options"] as? JSON {
+                if let json = stockData?.ADX["options"] {
                     self.updateChart(json)
                 }
                 self.hideActIndicator()
@@ -153,7 +161,7 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         case 6:
             webService.getCCI(symbol: symbol!) { (stockData) in
                 self.stockData.CCI = (stockData?.CCI)!
-                if let json = stockData?.CCI["options"] as? JSON {
+                if let json = stockData?.CCI["options"] {
                     self.updateChart(json)
                 }
                 self.hideActIndicator()
@@ -161,7 +169,7 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         case 7:
             webService.getBBANDS(symbol: symbol!) { (stockData) in
                 self.stockData.BBANDS = (stockData?.BBANDS)!
-                if let json = stockData?.BBANDS["options"] as? JSON {
+                if let json = stockData?.BBANDS["options"] {
                     self.updateChart(json)
                 }
                 self.hideActIndicator()
@@ -169,7 +177,7 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         case 8:
             webService.getMACD(symbol: symbol!) { (stockData) in
                 self.stockData.MACD = (stockData?.MACD)!
-                if let json = stockData?.MACD["options"] as? JSON {
+                if let json = stockData?.MACD["options"] {
                     self.updateChart(json)
                 }
                 self.hideActIndicator()
@@ -230,14 +238,25 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.chartWebView.load(urlRequest)
         
         webService.getPriceTable(symbol: symbol!) { (stockData) in
+            guard stockData != nil else {
+                self.stockData.priceTable = [:]
+                print("cant get priceTable data ")
+                return
+            }
             self.stockData.priceTable = (stockData?.priceTable)!
             print("Price Table Success")
             self.currentTableView.reloadData()
             SwiftSpinner.hide()
         }
         webService.getPriceChart(symbol: symbol!) { (stockData) in
+            guard stockData != nil else {
+                self.view.showToast("Failed to load Data. Please try again later", position: .bottom, popTime: 5, dismissOnTap: false)
+                SwiftSpinner.hide()
+                self.hideActIndicator()
+                return
+            }
             self.stockData.priceChart = (stockData?.priceChart)!
-            if let json = stockData?.priceChart["options"] as? JSON {
+            if let json = stockData?.priceChart["options"] {
                 self.updateChart(json)
                 print("initiating first price Chart")
             }

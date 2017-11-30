@@ -51,6 +51,15 @@ class NewsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             newsTableView.deselectRow(at: indexPath, animated: true)
     }
     
+    func showError() {
+        let errorView = UIView(frame:self.view.frame)
+        errorView.backgroundColor = UIColor.white
+        let errorLabel = UILabel(frame: CGRect(x: 50, y: 200, width: 250, height: 20))
+        errorLabel.text = "Failed to load news data"
+        errorView.addSubview(errorLabel)
+        view.addSubview(errorView)
+    }
+    
     //MARK: -
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,8 +70,15 @@ class NewsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.newsTableView.rowHeight = UITableViewAutomaticDimension
         self.newsTableView.estimatedRowHeight = 100
         
+        //error label
+        
+        
         let webService = WebService()
         webService.getNews(symbol: symbol!) { (stockData) in
+            guard stockData != nil else {
+                self.showError()
+                return
+            }
             self.stockData.news = (stockData?.news)!
             self.newsTableView.reloadData()
         }
