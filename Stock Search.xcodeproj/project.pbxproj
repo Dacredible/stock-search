@@ -21,6 +21,10 @@
 		63A2F1ED1FC7E92D005F674A /* StockAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A2F1EC1FC7E92D005F674A /* StockAPI.swift */; };
 		63A2F1F11FC8BCEE005F674A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63A2F1F01FC8BCEE005F674A /* Assets.xcassets */; };
 		63A2F1F51FC8F0A5005F674A /* HighStock.html in Resources */ = {isa = PBXBuildFile; fileRef = 63A2F1F41FC8F0A4005F674A /* HighStock.html */; };
+		63BD75A91FD0AF0F009799B7 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63BD75A51FD0AF0F009799B7 /* Bolts.framework */; };
+		63BD75AA1FD0AF0F009799B7 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63BD75A61FD0AF0F009799B7 /* FBSDKShareKit.framework */; };
+		63BD75AB1FD0AF0F009799B7 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63BD75A71FD0AF0F009799B7 /* FBSDKLoginKit.framework */; };
+		63BD75AC1FD0AF0F009799B7 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63BD75A81FD0AF0F009799B7 /* FBSDKCoreKit.framework */; };
 		63D4F1941FCA0F400033C152 /* FavoriteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D4F1931FCA0F400033C152 /* FavoriteItem.swift */; };
 		63D4F1961FCA10200033C152 /* FavListAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D4F1951FCA10200033C152 /* FavListAPI.swift */; };
 		63D4F1981FCA407F0033C152 /* HighChart.html in Resources */ = {isa = PBXBuildFile; fileRef = 63D4F1971FCA407F0033C152 /* HighChart.html */; };
@@ -43,6 +47,10 @@
 		63A2F1EC1FC7E92D005F674A /* StockAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAPI.swift; sourceTree = "<group>"; };
 		63A2F1F01FC8BCEE005F674A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63A2F1F41FC8F0A4005F674A /* HighStock.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = HighStock.html; sourceTree = "<group>"; };
+		63BD75A51FD0AF0F009799B7 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		63BD75A61FD0AF0F009799B7 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		63BD75A71FD0AF0F009799B7 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		63BD75A81FD0AF0F009799B7 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		63D4F1931FCA0F400033C152 /* FavoriteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteItem.swift; sourceTree = "<group>"; };
 		63D4F1951FCA10200033C152 /* FavListAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavListAPI.swift; sourceTree = "<group>"; };
 		63D4F1971FCA407F0033C152 /* HighChart.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = HighChart.html; sourceTree = "<group>"; };
@@ -55,7 +63,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63BD75AC1FD0AF0F009799B7 /* FBSDKCoreKit.framework in Frameworks */,
 				27EC0A7765AC778E91C4C873 /* Pods_Stock_Search.framework in Frameworks */,
+				63BD75A91FD0AF0F009799B7 /* Bolts.framework in Frameworks */,
+				63BD75AB1FD0AF0F009799B7 /* FBSDKLoginKit.framework in Frameworks */,
+				63BD75AA1FD0AF0F009799B7 /* FBSDKShareKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +77,10 @@
 		18539217E7E8726E4531D424 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				63BD75A51FD0AF0F009799B7 /* Bolts.framework */,
+				63BD75A81FD0AF0F009799B7 /* FBSDKCoreKit.framework */,
+				63BD75A71FD0AF0F009799B7 /* FBSDKLoginKit.framework */,
+				63BD75A61FD0AF0F009799B7 /* FBSDKShareKit.framework */,
 				75432BBFFF6FD01A12C1583E /* Pods_Stock_Search.framework */,
 			);
 			name = Frameworks;
@@ -188,6 +204,7 @@
 				TargetAttributes = {
 					6371A9891FC35A5300BF8E4D = {
 						CreatedOnToolsVersion = 9.1;
+						LastSwiftMigration = 0910;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -426,12 +443,18 @@
 			baseConfigurationReference = 9EB56C512315D619819DBA9E /* Pods-Stock Search.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AWE3U4QDH5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Stock Search/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.usc.jikunli.Stock-Search";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -442,8 +465,13 @@
 			baseConfigurationReference = 456352F426113A47F61DB1BC /* Pods-Stock Search.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AWE3U4QDH5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Stock Search/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.usc.jikunli.Stock-Search";

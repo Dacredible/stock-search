@@ -418,6 +418,9 @@
                                             <rect key="frame" x="241" y="14" width="35" height="35"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" backgroundImage="facebook"/>
+                                            <connections>
+                                                <action selector="fbShare:" destination="daH-ec-8Hj" eventType="touchUpInside" id="z1D-6v-q3X"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tdy-9z-qCr">
                                             <rect key="frame" x="300" y="14" width="35" height="35"/>

@@ -11,6 +11,7 @@ import SwiftSpinner
 import WebKit
 import SwiftyJSON
 import EasyToast
+import FacebookShare
 
 class priceTableCell: UITableViewCell {
     @IBOutlet weak var title: UILabel!
@@ -201,6 +202,65 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         starBtn.isSelected = !starBtn.isSelected
     }
     
+    @IBAction func fbShare(_ sender: Any) {
+        var options: JSON
+        switch didSelectRow {
+        case 0:
+            options = stockData.priceChart
+        case 1:
+            options = stockData.SMA
+        case 2:
+            options = stockData.EMA
+        case 3:
+            options = stockData.STOCH
+        case 4:
+            options = stockData.RSI
+        case 5:
+            options = stockData.ADX
+        case 6:
+            options = stockData.CCI
+        case 7:
+            options = stockData.BBANDS
+        case 8:
+            options = stockData.MACD
+        default:
+            return
+        }
+        
+        
+        
+        let imgUrl:String = "http://export.highcharts.com/charts/chart.0ac922ab64484a79baea8b5186bbc54a.png"
+        let url = URL(string:imgUrl)
+        var content = LinkShareContent(url: url!)
+        content.imageURL = URL(string: imgUrl)
+        
+        let shareDialog = ShareDialog(content: content)
+        shareDialog.mode = .automatic
+        shareDialog.presentingViewController = self
+        shareDialog.failsOnInvalidData = true
+        shareDialog.completion = { result in
+            // Handle share results
+            switch result {
+            case .success:
+                self.view.showToast("Share successfully", position: .bottom, popTime: 5, dismissOnTap: false)
+            case .failed:
+                self.view.showToast("Share failed", position: .bottom, popTime: 5, dismissOnTap: false)
+            case .cancelled:
+                self.view.showToast("Share cancelled", position: .bottom, popTime: 5, dismissOnTap: false)
+            }
+        }
+        do{
+            try shareDialog.show()
+
+        } catch {
+            print("fb share error")
+
+        }
+    
+    
+    
+    }
+    
     //MARK: -
     func updateChart(_ json: JSON) {
             if let options = json.rawString(options: []) {
@@ -241,6 +301,8 @@ class CurrentVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             guard stockData != nil else {
                 self.stockData.priceTable = [:]
                 print("cant get priceTable data ")
+                self.view.showToast("Failed to load Data. Please try again later", position: .bottom, popTime: 5, dismissOnTap: false)
+                SwiftSpinner.hide()
                 return
             }
             self.stockData.priceTable = (stockData?.priceTable)!

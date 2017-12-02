@@ -11,5 +11,8 @@ pod 'SwiftyJSON'
 pod 'SwiftSpinner'
 pod 'EasyToast'
 pod 'DropDown'
+pod 'FacebookCore'
+pod 'FacebookLogin'
+pod 'FacebookShare'
 
 end

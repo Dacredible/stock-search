@@ -275,9 +275,9 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         DropDown.appearance().backgroundColor = UIColor(white: 1, alpha: 0.8)
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             print("Selected item: \(item) at index: \(index)")
-            let arr = item.split(separator: " ")
-            let s = String(arr[0])
-            self.input.text = s
+//            let arr = item.split(separator: " ")
+//            let s = String(arr[0])
+            self.input.text = item
         }
     }
     
@@ -339,7 +339,9 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     //MARK: - segue methods
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "getQuote" {
-            let symbol = input.text?.trim().uppercased()
+            let longSymbol = input.text?.trim().uppercased()
+            let arr = longSymbol!.split(separator: " ")
+            let symbol = String(arr[0])
             (segue.destination as! ResultVC).symbol = symbol
         }
     }
