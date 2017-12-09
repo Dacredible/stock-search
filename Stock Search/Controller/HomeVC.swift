@@ -373,7 +373,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        self.navigationController?.isNavigationBarHidden = true
+//        self.navigationController?.isNavigationBarHidden = true
         
         if let x = IO.object(forKey: "symbolList") as? [String]{
             symbolList = x
@@ -391,7 +391,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        self.navigationController?.isNavigationBarHidden = false
+//        self.navigationController?.isNavigationBarHidden = false
     }
 
     //MARK: -

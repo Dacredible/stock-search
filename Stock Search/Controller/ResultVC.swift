@@ -64,5 +64,8 @@ class ResultVC: UIViewController {
         SwiftSpinner.show("Loading Data")
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
 
 }
