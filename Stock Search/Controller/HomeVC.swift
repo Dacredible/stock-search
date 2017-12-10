@@ -22,7 +22,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     @IBOutlet weak var getQuoteBtn: UIButton!
     
     var actIndicatior: UIActivityIndicatorView = UIActivityIndicatorView()
-    var timer: Timer!
+    var timer: Timer?
     
     let sortOptions = ["Default", "Symbol", "Price", "Change", "Change(%)"]
     let orderOptions = ["Ascending", "Descending"]
@@ -176,8 +176,11 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     
     //MARK: - keyboard event
     // dimiss the keyboard when touches outside textfield
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) { //this is not working 
+        
+//        view.endEditing(true)
+        input.resignFirstResponder()
+        print("touched out side")
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -315,13 +318,43 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     }
     
     @objc func refreshList() {
-        actIndicatior.startAnimating()
-        favList = []
-        fetchFavList(symbolList: symbolList) { (string) in
-            print(string)
-            print(self.favList)
-            self.stockTableView.reloadData()
-            self.actIndicatior.stopAnimating()
+        if timer == nil { //timer is off
+            actIndicatior.startAnimating()
+            favList = []
+            fetchFavList(symbolList: symbolList) { (string) in
+                print(string)
+                print(self.favList)
+                self.stockTableView.reloadData()
+                self.actIndicatior.stopAnimating()
+            }
+        } else { //timer is on
+            stopTimer()
+            actIndicatior.startAnimating()
+            favList = []
+            fetchFavList(symbolList: symbolList) { (string) in
+                print(string)
+                print(self.favList)
+                self.stockTableView.reloadData()
+                self.actIndicatior.stopAnimating()
+                self.startTimer()
+            }
+        }
+        
+    }
+    
+    //MARK: - timer
+    func startTimer(){
+        if timer == nil {
+            timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(refreshList), userInfo: nil, repeats: true)
+            print("start timer")
+        }
+    }
+    
+    func stopTimer(){
+        if timer != nil {
+            timer!.invalidate()
+            timer = nil
+            print("stop timer")
         }
     }
     
@@ -329,10 +362,10 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     @IBAction func toggleAutoRefresh(_ sender: UISwitch) {
         if sender.isOn {
             print("switch on")
-            timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(refreshList), userInfo: nil, repeats: true)
+            startTimer()
         } else {
-            print("switch of")
-            timer.invalidate()
+            print("switch off")
+            stopTimer()
         }
     }
     
